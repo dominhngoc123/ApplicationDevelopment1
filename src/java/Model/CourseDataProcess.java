@@ -263,8 +263,35 @@ public class CourseDataProcess {
         }
         return newCourseID;
     }
+    public List<Course> trainerSearchCourse(String trainerID, String searchContent)
+    {
+        List<Course> listCourseOfTrainer = new ArrayList<>();
+        String sql = "SELECT * FROM tblCourse WHERE trainerID = ? AND courseName LIKE '%" + searchContent + "%'";
+        try {
+            PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+            preparedStatement.setString(1, trainerID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next())
+            {
+                Course course = new Course();
+                course.setCourseID(resultSet.getString(1));
+                course.setCourseName(resultSet.getString(2));
+                course.setCourseStartDate(resultSet.getString(3));
+                course.setCourseEndDate(resultSet.getString(4));
+                course.setCourseLocation(resultSet.getString(5));
+                course.setCategoryID(resultSet.getString(6));
+                course.setTrainerID(resultSet.getString(7));
+                course.setCourseContent(resultSet.getString(8));
+                course.setStatus(resultSet.getInt(9));
+                listCourseOfTrainer.add(course);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CourseDataProcess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listCourseOfTrainer;
+    }
     public static void main(String[] args) {
         CourseDataProcess c = new CourseDataProcess();
-        System.out.println(c.generateCourseID("JAVA Core"));
+        System.out.println(c.trainerSearchCourse("Trainer00", "emo").size());
     }
 }
