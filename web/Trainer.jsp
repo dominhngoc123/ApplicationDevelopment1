@@ -37,21 +37,77 @@
     }
 </style>
 <script type="text/javascript">
+    function trainerSearchCourse()
+    {
+        $("#search51").keyup(function () {
+            var trainerID = document.getElementById("trainerID").value;
+            var x = document.getElementById("search51").value;
+            if (x !== '')
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "trainerSearchCourse.action?sltTrainer=" + trainerID + "&searchContent=" + x,
+                    success: function (itr) {
+                        var dataTable = "";
+                        $.each(itr['listTrainerCourse'], function () {
+                            dataTable += "<tr>";
+                            dataTable += "<td>" + this['courseID'] + "</td>";
+                            dataTable += "<td>" + this['courseName'] + "</td>";
+                            dataTable += "<td>" + this['courseStartDate'] + "</td>";
+                            dataTable += "<td>" + this['courseEndDate'] + "</td>";
+                            dataTable += "<td>" + this['courseLocation'] + "</td>";
+                            dataTable += "<td><a class='btn btn-info btn-block' href='trainerLoadDetailCourse?courseID=" + this['courseID'] + "'>Detail</a></td>";
+                            dataTable += "</tr>";
+                        });
+                        $("#display").html(dataTable);
+                    },
+                    error: function () {
+                        var dataTable = "<tr><td colspan='9'>No data found</td></tr>";
+                        $("#display").html(dataTable);
+                    }
+                });
+            } else
+            {
+                var email = document.getElementById("email").value;
+                $.ajax({
+                    type: "POST",
+                    url: "fetchTrainerCourse.action?username=" + email,
+                    success: function (itr) {
+                        var dataTable = "";
+                        $.each(itr['listCourse'], function () {
+                            dataTable += "<tr>";
+                            dataTable += "<td>" + this['courseID'] + "</td>";
+                            dataTable += "<td>" + this['courseName'] + "</td>";
+                            dataTable += "<td>" + this['courseStartDate'] + "</td>";
+                            dataTable += "<td>" + this['courseEndDate'] + "</td>";
+                            dataTable += "<td>" + this['courseLocation'] + "</td>";
+                            dataTable += "<td><a class='btn btn-info btn-block' href='trainerLoadDetailCourse?courseID=" + this['courseID'] + "'>Detail</a></td>";
+                            dataTable += "</tr>";
+                        });
+                        $("#display").html(dataTable);
+                    },
+                    error: function () {
+                        var dataTable = "<tr><td colspan='9'>No data found</td></tr>";
+                        $("#display").html(dataTable);
+                    }
+                });
+            }
+        });
+    }
 </script>
 <html>
     <jsp:include page="header.jsp"/>
     <jsp:include page="navigationbar.jsp"/>    
     <div class="table-content">
+        <input type="hidden" id="trainerID" value="<s:property value="username"/>"/>
         <table class="table table-responsive table-striped" id="table-list">
             <thead>
                 <tr>
-                    <td colspan="10"><h4>View assigned course in <u style="color: red"><s:property value="topicName"/></u> topic</h4></td>
+                    <td colspan="10"><h4>View assigned course</h4></td>
                 </tr>
                 <tr style="text-align: left;">
                     <td colspan="10">
-                        <form method="POST" action="loadCourse.action?action=Search" id="searchbox5">
-                            <input id="search51" name="searchContent" type="text" size="50" placeholder="Search by name"/>
-                        </form>
+                        <input id="search51" name="searchContent" type="text" size="50" placeholder="Search by name" onkeyup="trainerSearchCourse()"/>
                     </td>
                 </tr>
                 <tr>
@@ -59,10 +115,10 @@
                     <td>Course Name</td>
                     <td>Start Date</td>
                     <td>End Date</td>
-                    <td>More</td>
+                    <td>Location</td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="display">
                 <s:iterator value="listCourse">
                     <tr>
                         <td><s:property value="courseID"/></td>
