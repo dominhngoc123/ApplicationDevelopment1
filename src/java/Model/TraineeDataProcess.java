@@ -203,7 +203,7 @@ public class TraineeDataProcess {
 
     public boolean addTrainee(String traineeID, String traineeName, String traineeDoB, String traineeAddress, String traineePhoneNumber, String traineeEmail, String traineeDetail) {
         int check = 0;
-        String sql = "INSERT INTO tblTrainee VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tblTrainee VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
             preparedStatement.setString(1, traineeID);
