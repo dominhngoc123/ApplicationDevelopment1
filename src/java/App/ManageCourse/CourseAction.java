@@ -27,6 +27,7 @@ public class CourseAction extends ActionSupport {
 
     private List<Course> listCourse = new ArrayList<Course>();
     private List<Course> listCourse1 = new ArrayList<Course>();
+    private List<Course> listTrainerCourse = new ArrayList<>();
     private String courseID;
     private String courseName;
     private String courseStartDate;
@@ -50,6 +51,15 @@ public class CourseAction extends ActionSupport {
     private String selectedTopic;
     private String searchContent;
 
+    public List<Course> getListTrainerCourse() {
+        return listTrainerCourse;
+    }
+
+    public void setListTrainerCourse(List<Course> listTrainerCourse) {
+        this.listTrainerCourse = listTrainerCourse;
+    }
+
+    
     public List<Trainer> getListTrainerInTopic() {
         return listTrainerInTopic;
     }
@@ -365,5 +375,11 @@ public class CourseAction extends ActionSupport {
             return "REMOVESUCCESS";
         }
         return "REMOVEFAILED";
+    }
+    public String trainerSearchCourse()
+    {
+        CourseDataProcess courseDataProcess = new CourseDataProcess();
+        listTrainerCourse = courseDataProcess.trainerSearchCourse(sltTrainer, searchContent);
+        return "SEARCHDATA";
     }
 }
